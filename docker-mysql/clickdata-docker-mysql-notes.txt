@@ -1,0 +1,195 @@
+
+
+
+
+
+
+cd "/cygdrive/c/Users/lars_/Documents/my_corporate/AddScape/development/server API/V0.5/database/docker-mysql"
+
+
+https://www.howtogeek.com/devops/how-to-run-mysql-in-a-docker-container/
+
+# download docker image
+docker pull mysql:8.0
+
+docker images
+
+docker run --name cybotix-pos-mysql -e MYSQL_ROOT_PASSWORD=secret -v $HOME/mysql-data:/var/lib/mysql -p 3306:3306 -d mysql/mysql-server:8.0
+#docker run --name cybotix-pos-mysql -e MYSQL_ROOT_PASSWORD=secret -v $HOME/mysql-data:/var/lib/mysql -d mysql:8.0
+
+
+
+docker logs cybotix-pos-mysql
+
+# test docker port being "live"
+openssl s_client -connect localhost:3306
+
+docker exec -it [container_name] bash
+docker exec -it cybotix-pos-mysql bash
+
+
+
+mysqld --verbose --help | egrep -A2 bind-address
+
+# change the root password (from above)
+
+bash# mysql -uroot -p
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'secret';
+
+mysql> CREATE DATABASE CybotixDB;
+
+
+SELECT User FROM mysql.user;
+
+CREATE TABLE `CybotixDB`.`clickdata_tb` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userid` VARCHAR(45) NULL,
+  `uuid` VARCHAR(100) NOT NULL,
+  `browser_id` VARCHAR(45) NULL,
+  `utc` DATETIME NULL,
+  `local_time` DATETIME NULL,
+  `url` VARCHAR(1024) NULL,
+  PRIMARY KEY (`id`));
+
+
+CREATE TABLE IF NOT EXISTS messages (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        userid TEXT, browser_id, localtime, utc ,url TEXT NOT NULL);`;
+  
+
+
+# setup service user for application
+CREATE USER 'sqluser'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'sqluser'@'%';
+FLUSH PRIVILEGES;
+
+mysql --host=hostNameorIp --user=username --password=password database_name
+
+mysql --host=127.0.0.1 --user=root --password=secret CybotixDB;
+
+
+mysql  --user=root --password YNotesDB;
+SHOW TABLES;
+SHOW FULL TABLES;
+
+
+
+
+MYSQL_ROOT_PASSWORD=secure docker-compose up -d
+
+
+docker exec -it cybotix-pos-mysql mysql -p
+
+mysql -uroot -p show variables;
+
+
+To import a SQL file from your filesystem, you can pipe it into the command:
+
+ 
+docker exec -it my-mysql mysql -psecret database_name < path-to-file.sql
+
+mysql -uroot -pmypassword -h127.0.0.1 -P6603 -e 'show global variables like "max_connections"';
+
+
+# from openai
+docker pull mysql:latest
+
+docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=secret -p 3306:3306 -d mysql:latest
+# interact with mysql inside the container
+docker exec -it some-mysql mysql -u root -p
+
+create database ynotes;
+
+SELECT host, user FROM mysql.user;
+
+# or from outside
+docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=secret -p 3306:3306 -d mysql:latest
+
+docker ps
+openssl s_client -connect localhost:3306
+
+openssl s_client -connect 127.0.0.1:3306
+
+docker exec -it some-mysql bash
+
+mysqld --verbose --help | egrep -A2 -i bind
+
+
+mysql -uroot -p
+CREATE DATABASE YNotesDB;
+SELECT User FROM mysql.user;
+
+CREATE TABLE `YNotesDB`.`yellowstickynotes_tb` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `userid` VARCHAR(45) NULL,
+  `browserid` VARCHAR(45) NULL,
+  `createtime` DATETIME NULL,
+  `lastmodifiedtime` DATETIME NULL,
+  `url` VARCHAR(1024) NULL,
+  `uuid` VARCHAR(200) NULL,
+  `status` TINYINT(1) NULL,
+  `json` JSON NULL DEFAULT NULL,
+  PRIMARY KEY (`id`));
+
+
+
+# setup service user for application
+CREATE USER 'sqluser'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+GRANT ALL PRIVILEGES ON *.* TO 'sqluser'@'%';
+FLUSH PRIVILEGES;
+
+mysql --host=hostNameorIp --user=username --password=password database_name
+mysql  --user=root --password YNotesDB;
+SHOW TABLES;
+SHOW FULL TABLES;
+
+
+### https://phoenixnap.com/kb/mysql-docker-container
+docker pull mysql/mysql-server:8.0
+
+docker images
+
+REPOSITORY                                     TAG       IMAGE ID       CREATED        SIZE
+mysql/mysql-server                             8.0       1d9c2219ff69   8 months ago   496MB
+
+docker run --name=[container_name] -d [image_tag_name]
+docker run --name=yellownotes3 -e MYSQL_ROOT_PASSWORD=secret -p 3306:3306 -d mysql/mysql-server:8.0
+
+
+
+docker logs yellownotes3
+
+docker exec -it [container_name] bash
+docker exec -it yellownotes3 bash
+
+mysqld --verbose --help | grep bind-address
+
+# change the root password (from above)
+
+bash# mysql -uroot -p
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'secret';
+
+CREATE DATABASE YNotesDB;
+
+
+cat /etc/mysql/my.cnf
+
+
+docker inspect [container_name]
+docker inspect yellownotes_mysql
+
+docker start [container_name]
+docker start yellownotes3
+
+
+
+
+
+
+
+
+
+
+
