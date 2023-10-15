@@ -1,0 +1,16 @@
+
+
+terraform/*/*/.aws/credentials
+terraform/*/*/*/.aws/credentials
+
+*/.terraform/
+
+terraform/notes.txt
+*.tfstate
+*.backup
+*.exe
+*.hcl
+*/providers/*
+
+notes.txt
+
