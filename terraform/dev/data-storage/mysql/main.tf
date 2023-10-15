@@ -13,7 +13,7 @@ resource "aws_vpc" "example" {
  enable_dns_support = true
   enable_dns_hostnames = true
   tags = {
-    Name = "example-vpc"
+    Name = "development-env"
   }
 }
 
@@ -24,7 +24,7 @@ resource "aws_subnet" "example" {
   availability_zone       = "eu-west-1a" 
   map_public_ip_on_launch = true # Necessary for RDS to be accessible from the internet
   tags = {
-    Name = "example-subnet"
+    Name = "development-env"
   }
 }
 
@@ -34,7 +34,7 @@ resource "aws_subnet" "example_2" {
   availability_zone       = "eu-west-1b" # Ensure it's a different AZ from the first subnet
   map_public_ip_on_launch = false
   tags = {
-    Name = "example-subnet-2"
+    Name = "development-env"
   }
 }
 
@@ -52,7 +52,7 @@ resource "aws_eip" "example" {
   associate_with_private_ip = "10.0.0.11"
   depends_on = [aws_internet_gateway.example]
     tags = {
-    Name = "example-vpc"
+    Name = "development-env"
   }
 }
 
@@ -62,13 +62,16 @@ resource "aws_eip" "example" {
 resource "aws_nat_gateway" "example" {
   allocation_id = aws_eip.example.id
   subnet_id     = aws_subnet.example.id  # Assuming 'aws_subnet.example' is your public subnet
+  tags = {
+    Name = "development-env"
+  }
 }
 
 # Internet Gateway
 resource "aws_internet_gateway" "example" {
   vpc_id = aws_vpc.example.id
     tags = {
-    Name = "example-vpc"
+    Name = "development-env"
   }
 }
 
@@ -80,12 +83,16 @@ resource "aws_route_table" "private" {
     cidr_block = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.example.id
   }
+  tags = {
+    Name = "development-env"
+  }
  
 }
 
 resource "aws_route_table_association" "private_a" {
   subnet_id      = aws_subnet.example_2.id   # Assuming 'aws_subnet.example_2' is your private subnet for RDS
   route_table_id = aws_route_table.private.id
+ 
 }
 
 
@@ -97,12 +104,15 @@ resource "aws_route_table" "public" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.example.id
   }
-  
+  tags = {
+    Name = "development-env"
+  }
 }
 
 resource "aws_route_table_association" "public_a" {
   subnet_id      = aws_subnet.example.id
   route_table_id = aws_route_table.public.id
+  
 }
 
 
@@ -124,6 +134,9 @@ resource "aws_security_group" "example" {
     protocol    = "-1" # allows all protocols
     cidr_blocks = ["0.0.0.0/0"] # allows traffic to all IPs
   }
+  tags = {
+    Name = "development-env"
+  }
 }
 
 # RDS Instance
@@ -142,6 +155,6 @@ resource "aws_db_instance" "example" {
   vpc_security_group_ids = [aws_security_group.example.id]
   
     tags = {
-    Name = "example-vpc"
+    Name = "development-env"
   }
 }
