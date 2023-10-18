@@ -1,13 +1,14 @@
-
-
-# Add outputs for connection information
-output "rds_endpoint" {
-  description = "The connection endpoint for the RDS instance"
-  value       = aws_db_instance.example.endpoint
+# Add the ID of the VPC to the other confurations in the Dev env.
+output "aws_vpc_example_id" {
+  value = aws_vpc.example.id
 }
 
-output "rds_security_group_id" {
-  description = "The Security Group ID associated with the RDS instance"
-  value       = aws_security_group.example.id
+output "subnet_db_id" {
+  value = aws_subnet.example.id
 }
+
+output "subnet_web_id" {
+  value = aws_subnet.example_2.id
+}
+
 

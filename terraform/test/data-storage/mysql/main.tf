@@ -1,34 +1,23 @@
-
-
 provider "aws" {
   region = var.region
   shared_credentials_files = [".aws/credentials"]
-  profile                 = "terraform_deployment"
+  profile = "terraform_deployment"
 
 }
 
 
-
-
-
-
-
-
-
-
-resource "aws_db_subnet_group" "example" {
-  name       = "my-db-subnet-group"
+resource "aws_db_subnet_group" "test_db" {
+  name       = "test-db-subnet-group"
   subnet_ids = [var.subnet_db_id, var.subnet_web_id]
-
   tags = {
-    Name = "My DB Subnet Group"
+    Name = "test-env My DB Subnet Group"
   }
 }
 
 
 # Security Group
-resource "aws_security_group" "example" {
-  name        = "mysql-rds-sg"
+resource "aws_security_group" "test" {
+  name        = "test-mysql-rds-sg"
   description = "Allow external IP ranges to connect to RDS MySQL"
   vpc_id      = var.vpc_id
 
@@ -44,15 +33,16 @@ resource "aws_security_group" "example" {
     protocol    = "-1" # allows all protocols
     cidr_blocks = ["0.0.0.0/0"] # allows traffic to all IPs
   }
+  
   tags = {
-    Name = "development-env"
+    Name = "test-env"
   }
 }
 
 # RDS Instance
-resource "aws_db_instance" "example" {
+resource "aws_db_instance" "test_cybotix_db" {
   engine               = "mysql"
-  identifier           = "myrdsinstance"
+  identifier           = "test-cybotix-rds-instance"
   allocated_storage    =  20
   engine_version       = "5.7"
   instance_class       = "db.t2.micro"
@@ -60,11 +50,11 @@ resource "aws_db_instance" "example" {
   password             = "myrdspassword"
   publicly_accessible  = "true"
   parameter_group_name = "default.mysql5.7"
-  skip_final_snapshot    = true
-  db_subnet_group_name = aws_db_subnet_group.example.name
-  vpc_security_group_ids = [aws_security_group.example.id]
+  skip_final_snapshot  = true
+  db_subnet_group_name = aws_db_subnet_group.test_db.name
+  vpc_security_group_ids = [aws_security_group.test.id]
   
-    tags = {
-    Name = "development-env"
+  tags = {
+    Name = "test-env"
   }
 }
